@@ -1,0 +1,27 @@
+[package]
+org = "embedded-alerts"
+name = "eal-mcp-server"
+version = "0.1.0"
+description = "Read-only MCP server for the embedded-alerts organization"
+license = "MIT"
+language = "rust"
+
+[package.repository]
+vcs = "git"
+url = "https://github.com/embedded-alerts/eal-mcp-server.rs"
+
+[install]
+dir = ".vendor/.zed"
+
+[publish]
+include_readme = true
+tag_format = "v{version}"
+exclude = ["target/**", ".vendor/**", ".zed/**", ".env", ".env.*", "*.log"]
+
+[dependencies]
+"embedded-alerts/eal-clients" = "^0.1.0"
+"embedded-alerts/eal-interfaces" = "^0.1.0"
+"embedded-alerts/eal-libs" = "^0.1.0"
+"embedded-alerts/eal-cli" = "^0.1.0"
+"embedded-alerts/eal-sync" = "^0.1.0"
+"shared-auth/shared-auth-clients" = "^0.1.0"
