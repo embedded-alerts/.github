@@ -1,0 +1,628 @@
+{
+  "$schema": "./repository-relationships.schema.json",
+  "audience": "public",
+  "generated": {
+    "complete_for_visibility": "public",
+    "generated_at": "2026-08-05T23:41:16Z",
+    "generator_version": "2026-08-04.1",
+    "inventory_digest": "sha256:edf621080b3231ec798f1b9f7c0834ae7bb36aa2f13a216dd23c12d6cb5c3bd0",
+    "managed_by": "ore-repository-relationship-rollout",
+    "omitted_repository_count": 0,
+    "private_repositories_omitted": false,
+    "source": "GitHub GraphQL repository inventory plus reviewed manual declarations"
+  },
+  "owner": {
+    "account_type": "organization",
+    "dotgithub_repository": "embedded-alerts/.github",
+    "github_id": "313129319",
+    "linear_project": {
+      "id": "fa527793-877f-4d09-8331-682df0684915",
+      "name": "github.com/embedded-alerts",
+      "team_id": "eb8ab169-5afe-4b6f-9cab-3f2aa3e887dc",
+      "url": "https://linear.app/denman/project/githubcomembedded-alerts-2fb7392497ab",
+      "workspace": "denman"
+    },
+    "login": "embedded-alerts",
+    "mapping_id": "context:embedded-alerts"
+  },
+  "private_registry": {
+    "contains_non_public_inventory": false,
+    "digest": "sha256:c913ff5d3a46eadb1cb04c9a10859a438dc48e0d9f8c51fbc6144cb193975da2",
+    "path": "owners/embedded-alerts.json",
+    "repository": "approved-private-registry"
+  },
+  "relationships": [
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:025558df360dab2424123d2f0a5d925090b48192810beecb6d7709d6e459a643",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-api",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:5d69c9d5f00e91558a4424ee6dd8236692ed7dd347311402ffdca811a1fb47fa",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-cli",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:8a4d812423b4b805d0cbff8aa507b22aaac854b88204278c582614aedd6b289f",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-clients",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:4eacfcfb6f6f9d05a8ebb1559caebfbafdff59533ea0480b34879ad8daea322a",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-dioxus-web",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:f43be82a6b905cb880c89d014d43af3c0144a87ca8b36af438ea828c76e992a9",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-infra",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:47a3b0c4a2e9aad511d49d65e4ef24c28187598581279967dd39dd5aba6d264b",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-interfaces",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:2db4e798b3a9d4fd539c03281eaab34d04cb0576e4370b8eea9b192b193ebdd9",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-leptos-web",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:bf2656651b8e1e8084e1f30e4b41ad8ebef74a26062e601682eddc99ff8a1f04",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-libs",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:36211f5bafecaaaa2a34dde5850245066841947a1be252bbf72f9b032a879b39",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-mash-web",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:80086a68953a076667fe89a82245c2af1732b5de90403a67b9ecb7b3c0cd4681",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-monorepo",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:4ec44fd78ddb29ab2a83cb97875491084970eccd741708eb2f2728adb4b1b678",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/eal-sync",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:97a5e164d596953e179f1b28f3695eb4d44e6fe86a130e8101fdc3a6200427e3",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/embedded-alerts-clients",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:b5045905eeb063934374feaa9da3ea54a84d3688fe1bfe6acb976e80b4cfcfb6",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/embedded-alerts-libs",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:f6e529cdca60582c023c7f4be70fe54eba227a8061d3f41e168e2cc2d199084d",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/embedded-alerts-monorepo",
+      "type": "governs"
+    },
+    {
+      "confidence": 1.0,
+      "evidence": [
+        {
+          "kind": "github-owner-membership",
+          "source": "GitHub GraphQL repository inventory"
+        }
+      ],
+      "from": "embedded-alerts/.github",
+      "id": "sha256:fa0827d59d04d0031c150d58bb3726d35cfcac3f9fd3f2e947ada5068f056d5f",
+      "notes": "Organization .github policy and community-health defaults govern this sibling repository.",
+      "required": true,
+      "scope": "organization",
+      "status": "declared",
+      "to": "embedded-alerts/embedded-alerts.github.io",
+      "type": "governs"
+    },
+    {
+      "confidence": 0.82,
+      "evidence": [
+        {
+          "family": "eal",
+          "kind": "paired-repository-naming",
+          "source_role": "api-server",
+          "target_role": "interfaces"
+        }
+      ],
+      "from": "embedded-alerts/eal-api",
+      "id": "sha256:fe41c05c803db3510f9ff534e969fa9e710294e3799342561946b9dc23ccb005",
+      "notes": "Conservative naming inference; confirm or override in the manual declaration file.",
+      "required": false,
+      "scope": "organization",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-interfaces",
+      "type": "depends_on"
+    },
+    {
+      "confidence": 0.82,
+      "evidence": [
+        {
+          "family": "eal",
+          "kind": "paired-repository-naming",
+          "source_role": "clients",
+          "target_role": "interfaces"
+        }
+      ],
+      "from": "embedded-alerts/eal-clients",
+      "id": "sha256:f0f7ac7d6ebf0a1a1dd12dfd266a4879e95cfeb584f60406a670332533b5e745",
+      "notes": "Conservative naming inference; confirm or override in the manual declaration file.",
+      "required": false,
+      "scope": "organization",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-interfaces",
+      "type": "depends_on"
+    },
+    {
+      "confidence": 0.76,
+      "evidence": [
+        {
+          "family": "eal",
+          "kind": "paired-repository-naming"
+        }
+      ],
+      "from": "embedded-alerts/eal-infra",
+      "id": "sha256:652b7a0c9191701bd6c359c9dd2e27af8eefe44c6c9cb0284c07e56d3e2b0220",
+      "notes": "Conservative naming inference; confirm or override in the manual declaration file.",
+      "required": false,
+      "scope": "organization",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-monorepo",
+      "type": "deploys"
+    },
+    {
+      "confidence": 0.82,
+      "evidence": [
+        {
+          "family": "eal",
+          "kind": "paired-repository-naming",
+          "source_role": "sync",
+          "target_role": "interfaces"
+        }
+      ],
+      "from": "embedded-alerts/eal-sync",
+      "id": "sha256:f251aa507031f36856e0a8b1b601c6a741d7df21bd1b72e09c7314aae4e1de06",
+      "notes": "Conservative naming inference; confirm or override in the manual declaration file.",
+      "required": false,
+      "scope": "organization",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-interfaces",
+      "type": "depends_on"
+    },
+    {
+      "confidence": 0.95,
+      "evidence": [
+        {
+          "kind": "repository-name",
+          "value": "embedded-alerts.github.io"
+        }
+      ],
+      "from": "embedded-alerts/embedded-alerts.github.io",
+      "id": "sha256:e53b21510c12b125b808411f8284751d81e0e1ccbd763260afcf217855a3ca7f",
+      "notes": "The conventional *.github.io repository documents the organization profile.",
+      "required": false,
+      "scope": "organization",
+      "status": "inferred",
+      "to": "embedded-alerts/.github",
+      "type": "documents"
+    }
+  ],
+  "repositories": [
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/.github",
+      "github_id": "1324266321",
+      "name": ".github",
+      "owner": "embedded-alerts",
+      "roles": [
+        "community-health",
+        "governance",
+        "relationship-registry"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/.github",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-api",
+      "github_id": "1323564207",
+      "name": "eal-api",
+      "owner": "embedded-alerts",
+      "roles": [
+        "api-server"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-api",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-cli",
+      "github_id": "1323564256",
+      "name": "eal-cli",
+      "owner": "embedded-alerts",
+      "roles": [
+        "repository"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-cli",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-clients",
+      "github_id": "1323564290",
+      "name": "eal-clients",
+      "owner": "embedded-alerts",
+      "roles": [
+        "clients"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-clients",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-dioxus-web",
+      "github_id": "1323564752",
+      "name": "eal-dioxus-web",
+      "owner": "embedded-alerts",
+      "roles": [
+        "repository"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-dioxus-web",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-infra",
+      "github_id": "1323564362",
+      "name": "eal-infra",
+      "owner": "embedded-alerts",
+      "roles": [
+        "infrastructure"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-infra",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-interfaces",
+      "github_id": "1323564427",
+      "name": "eal-interfaces",
+      "owner": "embedded-alerts",
+      "roles": [
+        "interfaces"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-interfaces",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-leptos-web",
+      "github_id": "1323564831",
+      "name": "eal-leptos-web",
+      "owner": "embedded-alerts",
+      "roles": [
+        "repository"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-leptos-web",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-libs",
+      "github_id": "1323564490",
+      "name": "eal-libs",
+      "owner": "embedded-alerts",
+      "roles": [
+        "repository"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-libs",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-mash-web",
+      "github_id": "1323564892",
+      "name": "eal-mash-web",
+      "owner": "embedded-alerts",
+      "roles": [
+        "repository"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-mash-web",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-monorepo",
+      "github_id": "1323564580",
+      "name": "eal-monorepo",
+      "owner": "embedded-alerts",
+      "roles": [
+        "monorepo"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-monorepo",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-sync",
+      "github_id": "1323564676",
+      "name": "eal-sync",
+      "owner": "embedded-alerts",
+      "roles": [
+        "sync"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/eal-sync",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/embedded-alerts-clients",
+      "github_id": "1323569369",
+      "name": "embedded-alerts-clients",
+      "owner": "embedded-alerts",
+      "roles": [
+        "clients"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/embedded-alerts-clients",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/embedded-alerts-libs",
+      "github_id": "1323569471",
+      "name": "embedded-alerts-libs",
+      "owner": "embedded-alerts",
+      "roles": [
+        "repository"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/embedded-alerts-libs",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/embedded-alerts-monorepo",
+      "github_id": "1323569639",
+      "name": "embedded-alerts-monorepo",
+      "owner": "embedded-alerts",
+      "roles": [
+        "monorepo"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/embedded-alerts-monorepo",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/embedded-alerts.github.io",
+      "github_id": "1323564929",
+      "name": "embedded-alerts.github.io",
+      "owner": "embedded-alerts",
+      "roles": [
+        "documentation-site"
+      ],
+      "source": "github-graphql-api",
+      "url": "https://github.com/embedded-alerts/embedded-alerts.github.io",
+      "visibility": "public"
+    }
+  ],
+  "schema_version": 1,
+  "unresolved_hints": []
+}
