@@ -1,0 +1,55 @@
+name: Validate eal-e2e seed
+
+on:
+  pull_request:
+    paths:
+      - repository-seeds/eal-e2e/**
+      - .github/workflows/validate-eal-e2e-seed.yml
+  push:
+    branches: [main]
+    paths:
+      - repository-seeds/eal-e2e/**
+      - .github/workflows/validate-eal-e2e-seed.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22.18.0
+      - name: Resolve exact npm graph without lifecycle scripts
+        run: |
+          npm --prefix repository-seeds/eal-e2e install \
+            --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm --prefix repository-seeds/eal-e2e ci \
+            --ignore-scripts --no-audit --no-fund
+      - name: Run offline seed contracts
+        working-directory: repository-seeds/eal-e2e
+        run: |
+          node scripts/validate-structure.mjs
+          node --test tests/contracts/*.test.mjs
+          find . -type f -name '*.mjs' -print0 | xargs -0 -n1 node --check
+          bash -n publish.sh
+          test ! -e .zpkg.lock
+          test ! -e .gitmodules
+      - name: Reject credential-shaped tracked values
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -RInE 'sk-(svcacct|ant-api|proj)-[A-Za-z0-9_-]{16,}' repository-seeds/eal-e2e; then
+            echo 'credential-shaped value found in seed' >&2
+            exit 1
+          fi
