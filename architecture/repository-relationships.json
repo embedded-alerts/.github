@@ -1,0 +1,726 @@
+{
+  "$schema": "./repository-relationships.schema.json",
+  "composition_policy": {
+    "dual_managed_invariant": "gitlink SHA must equal the source commit in the Zed lock entry",
+    "editable_source_composition": "git-submodules",
+    "package_and_artifact_resolution": "zed-pkg",
+    "production_deployment_resolution": "immutable OCI image digest or signed artifact",
+    "production_source_checkout": "forbidden as a runtime deployment mechanism"
+  },
+  "inventory_scope": "public-repositories-plus-role-contracts",
+  "observability_policy": {
+    "logs": "structured output with trace_id/span_id correlation",
+    "metrics": "Prometheus-compatible bounded-cardinality metrics",
+    "required_resource_attributes": [
+      "service.name",
+      "service.namespace",
+      "service.version",
+      "deployment.environment",
+      "vcs.ref.head.revision"
+    ],
+    "traces": "OpenTelemetry with W3C trace context"
+  },
+  "organization": "embedded-alerts",
+  "privacy": {
+    "private_repository_count": 0,
+    "private_repository_names_published": false,
+    "public_repository_names_published": true,
+    "reason": "The public .github registry intentionally withholds private repository names and edges."
+  },
+  "registry_repository": "embedded-alerts/.github",
+  "relationships": [
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-api"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-cli"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-clients"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-dioxus-web"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-infra"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-interfaces"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-leptos-web"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-libs"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-mash-web"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-mcp-server.rs"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-monorepo"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-sync"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts-clients"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts-libs"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts-monorepo"
+    },
+    {
+      "from": "embedded-alerts/.github",
+      "kind": "governs",
+      "rationale": "organization defaults, safety, and relationship declarations",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts.github.io"
+    },
+    {
+      "from": "embedded-alerts/eal-api",
+      "kind": "implements_contracts_from",
+      "rationale": "service boundary implements canonical contracts",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-interfaces"
+    },
+    {
+      "from": "embedded-alerts/eal-cli",
+      "kind": "calls",
+      "rationale": "client uses the product service boundary",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-api"
+    },
+    {
+      "from": "embedded-alerts/eal-clients",
+      "kind": "generated_from",
+      "rationale": "SDK bindings derive from canonical contracts",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-interfaces"
+    },
+    {
+      "from": "embedded-alerts/eal-infra",
+      "kind": "deploys",
+      "rationale": "product infrastructure declares runtime resources",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-api"
+    },
+    {
+      "from": "embedded-alerts/eal-infra",
+      "kind": "deploys",
+      "rationale": "product infrastructure declares runtime resources",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-cli"
+    },
+    {
+      "from": "embedded-alerts/eal-infra",
+      "kind": "deploys",
+      "rationale": "product infrastructure declares runtime resources",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-mcp-server.rs"
+    },
+    {
+      "from": "embedded-alerts/eal-infra",
+      "kind": "deploys",
+      "rationale": "product infrastructure declares runtime resources",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-sync"
+    },
+    {
+      "from": "embedded-alerts/eal-mcp-server.rs",
+      "kind": "calls",
+      "rationale": "agent tools use the authenticated product API",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-api"
+    },
+    {
+      "from": "embedded-alerts/eal-mcp-server.rs",
+      "kind": "uses_sdk",
+      "rationale": "agent adapter reuses the typed product SDK",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-clients"
+    },
+    {
+      "from": "embedded-alerts/eal-mcp-server.rs",
+      "kind": "uses_sdk",
+      "rationale": "agent adapter reuses the typed product SDK",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts-clients"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-api"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-cli"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-clients"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-dioxus-web"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-infra"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-interfaces"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-leptos-web"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-libs"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-mash-web"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-mcp-server.rs"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-sync"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts-clients"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts-libs"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts-monorepo"
+    },
+    {
+      "from": "embedded-alerts/eal-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts.github.io"
+    },
+    {
+      "from": "embedded-alerts/eal-sync",
+      "kind": "synchronizes_with",
+      "rationale": "sync exchanges state through the product service boundary",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-api"
+    },
+    {
+      "from": "embedded-alerts/eal-sync",
+      "kind": "uses_contracts_from",
+      "rationale": "sync payloads follow canonical schemas",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-interfaces"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-clients",
+      "kind": "generated_from",
+      "rationale": "SDK bindings derive from canonical contracts",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-interfaces"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-api"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-cli"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-clients"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-dioxus-web"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-infra"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-interfaces"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-leptos-web"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-libs"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-mash-web"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-mcp-server.rs"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-monorepo"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/eal-sync"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts-clients"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts-libs"
+    },
+    {
+      "from": "embedded-alerts/embedded-alerts-monorepo",
+      "kind": "composes",
+      "rationale": "development workspace and release bill of materials",
+      "source_basis": "role-convention",
+      "status": "inferred",
+      "to": "embedded-alerts/embedded-alerts.github.io"
+    },
+    {
+      "from": "organization://embedded-alerts",
+      "kind": "reconciles_via",
+      "rationale": "product sync wraps the generic reconciliation engine",
+      "source_basis": "platform-policy",
+      "status": "platform-default",
+      "to": "platform://opto-sync"
+    },
+    {
+      "from": "organization://embedded-alerts",
+      "kind": "deployed_via",
+      "rationale": "immutable artifacts are promoted by digest through GitOps",
+      "source_basis": "platform-policy",
+      "status": "platform-default",
+      "to": "platform://ORESoftware/k8s-cluster"
+    },
+    {
+      "from": "organization://embedded-alerts",
+      "kind": "uses_transport_library",
+      "rationale": "shared MCP transport and protocol hardening",
+      "source_basis": "platform-policy",
+      "status": "platform-default",
+      "to": "platform://ORESoftware/mcp-rust-libs"
+    },
+    {
+      "from": "organization://embedded-alerts",
+      "kind": "packaged_via",
+      "rationale": "Zed resolves artifacts while submodules compose editable source",
+      "source_basis": "platform-policy",
+      "status": "platform-default",
+      "to": "platform://zed-pkg"
+    }
+  ],
+  "repositories": [
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/.github",
+      "lifecycle": "active",
+      "name": ".github",
+      "role": "organization_governance",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-interfaces",
+      "lifecycle": "active",
+      "name": "eal-interfaces",
+      "role": "interfaces",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-clients",
+      "lifecycle": "active",
+      "name": "eal-clients",
+      "role": "client_sdk",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/embedded-alerts-clients",
+      "lifecycle": "active",
+      "name": "embedded-alerts-clients",
+      "role": "client_sdk",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-api",
+      "lifecycle": "active",
+      "name": "eal-api",
+      "role": "api_service",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-sync",
+      "lifecycle": "active",
+      "name": "eal-sync",
+      "role": "sync_service",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-mcp-server.rs",
+      "lifecycle": "active",
+      "name": "eal-mcp-server.rs",
+      "role": "mcp_server",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-cli",
+      "lifecycle": "active",
+      "name": "eal-cli",
+      "role": "cli",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/embedded-alerts.github.io",
+      "lifecycle": "active",
+      "name": "embedded-alerts.github.io",
+      "role": "site",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-infra",
+      "lifecycle": "active",
+      "name": "eal-infra",
+      "role": "infrastructure",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-monorepo",
+      "lifecycle": "active",
+      "name": "eal-monorepo",
+      "role": "composition_workspace",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/embedded-alerts-monorepo",
+      "lifecycle": "active",
+      "name": "embedded-alerts-monorepo",
+      "role": "composition_workspace",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-dioxus-web",
+      "lifecycle": "active",
+      "name": "eal-dioxus-web",
+      "role": "uncategorized",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-leptos-web",
+      "lifecycle": "active",
+      "name": "eal-leptos-web",
+      "role": "uncategorized",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-libs",
+      "lifecycle": "active",
+      "name": "eal-libs",
+      "role": "uncategorized",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/eal-mash-web",
+      "lifecycle": "active",
+      "name": "eal-mash-web",
+      "role": "uncategorized",
+      "visibility": "public"
+    },
+    {
+      "archived": false,
+      "default_branch": "main",
+      "fork": false,
+      "full_name": "embedded-alerts/embedded-alerts-libs",
+      "lifecycle": "active",
+      "name": "embedded-alerts-libs",
+      "role": "uncategorized",
+      "visibility": "public"
+    }
+  ],
+  "role_contracts": {
+    "api_service": "Owns public APIs, webhooks, authorization, validation, and orchestration.",
+    "client_sdk": "Depends on interfaces and exposes generated clients plus thin wrappers.",
+    "composition_workspace": "Composes source repositories and records the release BOM.",
+    "end_to_end_tests": "Runs black-box compatibility and user-flow checks.",
+    "infrastructure": "Owns product cloud resources; promotion remains GitOps-controlled.",
+    "interfaces": "Own OpenAPI, events, JSON Schema, compatibility fixtures, and DTO inputs.",
+    "mcp_server": "Calls product SDKs/APIs; no parallel domain persistence.",
+    "sync_service": "Owns product conflict policy/adapters and wraps Opto reconciliation.",
+    "web_bff": "Owns browser sessions, CSRF, HTML/SSR, and calls the product API."
+  },
+  "schema_version": "1.0.0",
+  "service_boundary_policy": {
+    "cross_service_database_access": "forbidden-by-default",
+    "mcp_database_access": "forbidden-by-default; MCP calls the product API/SDK",
+    "preferred_cross_service_calls": "typed API/SDK, event, or owned replicated read model"
+  }
+}
