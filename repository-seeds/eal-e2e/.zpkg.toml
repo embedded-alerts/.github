@@ -1,6 +1,14 @@
 [package]
-name = "embedded-alerts/eal-e2e"
+org = "embedded-alerts"
+name = "eal-e2e"
 version = "0.1.0"
+description = "End-to-end integration package for Embedded Alerts"
+license = "MIT"
+language = "polyglot"
+
+[package.repository]
+vcs = "git"
+url = "https://github.com/embedded-alerts/eal-e2e"
 
 [install]
 dir = ".vendor/.zed"
