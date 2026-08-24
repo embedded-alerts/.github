@@ -1,0 +1,105 @@
+name: Generate Git commit embeddings
+description: Generate model-versioned vector records from newly pushed Git commits.
+
+inputs:
+  github-token:
+    description: Short-lived GITHUB_TOKEN with contents:read and models:read.
+    required: true
+  repository:
+    description: Repository in owner/name form.
+    required: true
+  before-sha:
+    description: Commit immediately before the delivered push.
+    required: false
+    default: ""
+  after-sha:
+    description: Commit at the head of the delivered push.
+    required: false
+    default: ""
+  ref-name:
+    description: Human-readable branch or tag name associated with the push.
+    required: false
+    default: ""
+  model:
+    description: GitHub Models embedding model identifier.
+    required: false
+    default: openai/text-embedding-3-small
+  dimensions:
+    description: Number of dimensions requested for each embedding.
+    required: false
+    default: "512"
+  max-commits:
+    description: Maximum commits accepted in one delivered range.
+    required: false
+    default: "100"
+  max-chunk-bytes:
+    description: Maximum UTF-8 bytes sent for one embedding input.
+    required: false
+    default: "6000"
+  max-patch-bytes:
+    description: Maximum textual patch bytes read for one commit.
+    required: false
+    default: "1000000"
+  webhook-url:
+    description: Optional credential-free HTTPS endpoint that accepts application/x-ndjson.
+    required: false
+    default: ""
+  webhook-token:
+    description: Optional bearer token used only for webhook delivery.
+    required: false
+    default: ""
+  retention-days:
+    description: Requested retention period for the generated Actions artifact.
+    required: false
+    default: "90"
+
+outputs:
+  artifact-name:
+    description: Name of the uploaded commit-embedding artifact.
+    value: ${{ steps.generate.outputs.artifact-name }}
+  artifact-url:
+    description: URL of the uploaded artifact, when records were generated.
+    value: ${{ steps.upload.outputs.artifact-url }}
+  artifact-digest:
+    description: SHA-256 digest reported by the artifact service.
+    value: ${{ steps.upload.outputs.artifact-digest }}
+  commit-count:
+    description: Number of commits indexed.
+    value: ${{ steps.generate.outputs.commit-count }}
+  record-count:
+    description: Number of vector records generated.
+    value: ${{ steps.generate.outputs.record-count }}
+
+runs:
+  using: composite
+  steps:
+    - name: Generate embeddings
+      id: generate
+      shell: bash
+      env:
+        EAL_GITHUB_TOKEN: ${{ inputs.github-token }}
+        EAL_REPOSITORY: ${{ inputs.repository }}
+        EAL_BEFORE_SHA: ${{ inputs.before-sha }}
+        EAL_AFTER_SHA: ${{ inputs.after-sha }}
+        EAL_REF_NAME: ${{ inputs.ref-name }}
+        EAL_EMBEDDING_MODEL: ${{ inputs.model }}
+        EAL_EMBEDDING_DIMENSIONS: ${{ inputs.dimensions }}
+        EAL_MAX_COMMITS: ${{ inputs.max-commits }}
+        EAL_MAX_CHUNK_BYTES: ${{ inputs.max-chunk-bytes }}
+        EAL_MAX_PATCH_BYTES: ${{ inputs.max-patch-bytes }}
+        EAL_OUTPUT_FILE: .artifacts/commit-embeddings/records.jsonl
+        EAL_WEBHOOK_URL: ${{ inputs.webhook-url }}
+        EAL_WEBHOOK_TOKEN: ${{ inputs.webhook-token }}
+      run: python3 "$GITHUB_ACTION_PATH/embed_commits.py"
+
+    - name: Upload embedding records
+      id: upload
+      if: steps.generate.outputs.record-count != '0'
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: ${{ steps.generate.outputs.artifact-name }}
+        path: ${{ steps.generate.outputs.output-file }}
+        if-no-files-found: error
+        include-hidden-files: true
+        compression-level: 9
+        retention-days: ${{ inputs.retention-days }}
