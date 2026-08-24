@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import importlib.util
-import math
 from pathlib import Path
 import unittest
 
@@ -73,30 +72,34 @@ class RedactionTests(unittest.TestCase):
         self.assertIn("[REDACTED:", redacted)
 
 
-class ResponseValidationTests(unittest.TestCase):
-    def test_orders_vectors_by_response_index(self) -> None:
-        response = {
-            "data": [
-                {"index": 1, "embedding": [3, 4]},
-                {"index": 0, "embedding": [1, 2]},
-            ]
-        }
+class LocalEmbeddingTests(unittest.TestCase):
+    def test_embedding_is_deterministic_l2_normalized_and_sized(self) -> None:
+        text = "feat: parse GitCommit payload\nfn parse_git_commit() {}"
 
-        vectors = embed_commits.validate_embedding_response(response, 2, 2)
+        first = embed_commits.local_embedding(text, 256)
+        second = embed_commits.local_embedding(text, 256)
 
-        self.assertEqual(vectors, [[1.0, 2.0], [3.0, 4.0]])
+        self.assertEqual(first, second)
+        self.assertEqual(len(first), 256)
+        self.assertAlmostEqual(sum(value * value for value in first), 1.0, places=12)
 
-    def test_rejects_non_finite_vectors(self) -> None:
-        response = {"data": [{"index": 0, "embedding": [0.0, math.inf]}]}
+    def test_embedding_changes_with_content(self) -> None:
+        left = embed_commits.local_embedding("rust webhook retry", 256)
+        right = embed_commits.local_embedding("css dashboard layout", 256)
 
+        self.assertNotEqual(left, right)
+
+    def test_identifier_features_split_camel_and_snake_case(self) -> None:
+        features = embed_commits.embedding_features("parseGitCommit commit_sha")
+
+        self.assertIn("identifier:parse", features)
+        self.assertIn("identifier:git", features)
+        self.assertIn("identifier:commit", features)
+        self.assertIn("identifier:sha", features)
+
+    def test_empty_document_is_rejected(self) -> None:
         with self.assertRaises(embed_commits.EmbeddingError):
-            embed_commits.validate_embedding_response(response, 1, 2)
-
-    def test_rejects_wrong_dimensions(self) -> None:
-        response = {"data": [{"index": 0, "embedding": [0.0]}]}
-
-        with self.assertRaises(embed_commits.EmbeddingError):
-            embed_commits.validate_embedding_response(response, 1, 2)
+            embed_commits.local_embedding("", 256)
 
 
 class WebhookValidationTests(unittest.TestCase):
