@@ -3,9 +3,9 @@
 
 The script is intentionally dependency-free so it can run on a stock GitHub
 hosted runner. It reads a checked-out repository, derives bounded documents
-from commit metadata and textual patches, calls the GitHub Models embeddings
-endpoint, writes newline-delimited JSON, and optionally forwards the same
-records to an HTTPS webhook.
+from commit metadata and textual patches, generates deterministic local
+feature-hash embeddings, writes newline-delimited JSON, and optionally forwards
+the same records to an HTTPS webhook.
 """
 
 from __future__ import annotations
@@ -19,15 +19,17 @@ import re
 import subprocess
 import sys
 import time
-from typing import Any, Iterable, Sequence
+from collections import Counter
+from typing import Any, Sequence
+import unicodedata
 from urllib import error, parse, request
 
 
-API_VERSION = "2026-03-10"
-DEFAULT_ENDPOINT = "https://models.github.ai/inference/embeddings"
 SCHEMA_VERSION = "eal.git-commit-embedding.v1"
+MODEL_ID = "eal/git-commit-hash-v1"
 ZERO_SHA = "0" * 40
 SHA_RE = re.compile(r"^[0-9a-fA-F]{40}$")
+FEATURE_TOKEN_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,127}|[0-9]+|[^\s\w]{1,4}")
 
 EXCLUDED_PATCH_PATHS = (
     ":(exclude,glob)**/.env",
@@ -296,77 +298,54 @@ def retry_delay(headers: Any, attempt: int) -> float:
     return min(16.0, float(2**attempt))
 
 
-def embeddings_request(
-    inputs: Sequence[str], token: str, model: str, dimensions: int
-) -> list[list[float]]:
-    payload = json.dumps(
-        {
-            "model": model,
-            "input": list(inputs),
-            "dimensions": dimensions,
-            "encoding_format": "float",
-        },
-        separators=(",", ":"),
-    ).encode("utf-8")
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json",
-        "User-Agent": "embedded-alerts-commit-embeddings/1",
-        "X-GitHub-Api-Version": API_VERSION,
-    }
-
-    for attempt in range(5):
-        req = request.Request(DEFAULT_ENDPOINT, data=payload, headers=headers, method="POST")
-        try:
-            with request.urlopen(req, timeout=60) as response:
-                decoded = json.loads(response.read().decode("utf-8"))
-                return validate_embedding_response(decoded, len(inputs), dimensions)
-        except error.HTTPError as exc:
-            if exc.code == 429 or 500 <= exc.code < 600:
-                if attempt < 4:
-                    time.sleep(retry_delay(exc.headers, attempt))
-                    continue
-            raise EmbeddingError(f"GitHub Models request failed with HTTP {exc.code}") from exc
-        except (error.URLError, TimeoutError) as exc:
-            if attempt < 4:
-                time.sleep(retry_delay(None, attempt))
-                continue
-            raise EmbeddingError("GitHub Models request failed after retries") from exc
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise EmbeddingError("GitHub Models returned invalid JSON") from exc
-    raise EmbeddingError("GitHub Models request exhausted retries")
+def identifier_parts(token: str) -> list[str]:
+    with_boundaries = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", token)
+    return [part.lower() for part in re.split(r"[_\W]+", with_boundaries) if part]
 
 
-def validate_embedding_response(
-    response: dict[str, Any], expected_count: int, dimensions: int
-) -> list[list[float]]:
-    data = response.get("data")
-    if not isinstance(data, list) or len(data) != expected_count:
-        raise EmbeddingError("GitHub Models returned an unexpected embedding count")
+def embedding_features(text: str) -> list[str]:
+    normalized = unicodedata.normalize("NFKC", text)
+    raw_tokens = FEATURE_TOKEN_RE.findall(normalized)
+    tokens = [token.lower() for token in raw_tokens]
+    features = [f"token:{token}" for token in tokens]
 
-    ordered: list[list[float] | None] = [None] * expected_count
-    for item in data:
-        if not isinstance(item, dict) or not isinstance(item.get("index"), int):
-            raise EmbeddingError("GitHub Models returned malformed embedding metadata")
-        index = item["index"]
-        vector = item.get("embedding")
-        if not 0 <= index < expected_count or ordered[index] is not None:
-            raise EmbeddingError("GitHub Models returned invalid embedding indexes")
-        if not isinstance(vector, list) or len(vector) != dimensions:
-            raise EmbeddingError("GitHub Models returned an unexpected vector dimension")
-        if not all(isinstance(value, (int, float)) and math.isfinite(value) for value in vector):
-            raise EmbeddingError("GitHub Models returned a non-finite embedding value")
-        ordered[index] = [float(value) for value in vector]
+    for raw in raw_tokens:
+        if not (raw[0].isalpha() or raw[0] == "_"):
+            continue
+        for part in identifier_parts(raw):
+            features.append(f"identifier:{part}")
+            bounded = f"^{part}$"
+            if len(bounded) >= 3:
+                features.extend(
+                    f"identifier-trigram:{bounded[index:index + 3]}"
+                    for index in range(len(bounded) - 2)
+                )
 
-    if any(vector is None for vector in ordered):
-        raise EmbeddingError("GitHub Models omitted an embedding")
-    return [vector for vector in ordered if vector is not None]
+    features.extend(
+        f"token-bigram:{left}\u241f{right}"
+        for left, right in zip(tokens, tokens[1:])
+    )
+    return features
 
 
-def batches(values: Sequence[Any], size: int) -> Iterable[tuple[int, Sequence[Any]]]:
-    for start in range(0, len(values), size):
-        yield start, values[start : start + size]
+def local_embedding(text: str, dimensions: int) -> list[float]:
+    if dimensions < 1:
+        raise EmbeddingError("embedding dimensions must be positive")
+    counts = Counter(embedding_features(text))
+    vector = [0.0] * dimensions
+    for feature, count in counts.items():
+        digest = hashlib.sha256(f"{MODEL_ID}\0{feature}".encode("utf-8")).digest()
+        index = int.from_bytes(digest[:8], "big") % dimensions
+        sign = 1.0 if digest[8] & 1 else -1.0
+        vector[index] += sign * (1.0 + math.log(float(count)))
+
+    norm = math.sqrt(sum(value * value for value in vector))
+    if not math.isfinite(norm) or norm == 0.0:
+        raise EmbeddingError("commit document did not produce a finite embedding")
+    normalized = [value / norm for value in vector]
+    if not all(math.isfinite(value) for value in normalized):
+        raise EmbeddingError("local embedder produced a non-finite value")
+    return normalized
 
 
 class NoRedirect(request.HTTPRedirectHandler):
@@ -440,8 +419,6 @@ def main() -> int:
     before = os.environ.get("EAL_BEFORE_SHA", "")
     after = os.environ.get("EAL_AFTER_SHA", "") or os.environ.get("GITHUB_SHA", "")
     event_name = os.environ.get("GITHUB_EVENT_NAME", "")
-    token = os.environ.get("EAL_GITHUB_TOKEN", "")
-    model = os.environ.get("EAL_EMBEDDING_MODEL", "openai/text-embedding-3-small").strip()
     output_file = Path(
         os.environ.get(
             "EAL_OUTPUT_FILE", ".artifacts/commit-embeddings/records.jsonl"
@@ -449,18 +426,13 @@ def main() -> int:
     )
     webhook_url = os.environ.get("EAL_WEBHOOK_URL", "").strip()
     webhook_token = os.environ.get("EAL_WEBHOOK_TOKEN", "")
-    dimensions = env_int("EAL_EMBEDDING_DIMENSIONS", 512, 1, 3_072)
+    dimensions = env_int("EAL_EMBEDDING_DIMENSIONS", 1_024, 64, 8_192)
     max_commits = env_int("EAL_MAX_COMMITS", 100, 1, 1_000)
     max_chunk_bytes = env_int("EAL_MAX_CHUNK_BYTES", 6_000, 2_000, 24_000)
     max_patch_bytes = env_int("EAL_MAX_PATCH_BYTES", 1_000_000, 10_000, 20_000_000)
 
     if not repository or "/" not in repository:
         raise EmbeddingError("repository must use owner/name form")
-    if not token:
-        raise EmbeddingError("a GitHub token with models:read is required")
-    if not model or len(model) > 200:
-        raise EmbeddingError("embedding model is invalid")
-
     commit_shas = select_commits(before, after, max_commits, event_name)
     if not commit_shas:
         set_action_output("record-count", "0")
@@ -490,10 +462,8 @@ def main() -> int:
                 }
             )
 
-    vectors: list[list[float]] = []
     contents = [document["content"] for document in documents]
-    for _, batch in batches(contents, 16):
-        vectors.extend(embeddings_request(batch, token, model, dimensions))
+    vectors = [local_embedding(content, dimensions) for content in contents]
 
     records: list[dict[str, Any]] = []
     for document, vector in zip(documents, vectors, strict=True):
@@ -506,7 +476,7 @@ def main() -> int:
                 repository,
                 sha,
                 str(document["chunk_index"]),
-                model,
+                MODEL_ID,
                 str(dimensions),
                 content_sha256,
             )
@@ -536,12 +506,12 @@ def main() -> int:
                 "content": content,
                 "content_sha256": "sha256:" + content_sha256,
                 "embedding_space": {
-                    "provider": "github-models",
-                    "model": model,
-                    "model_revision": f"{model}@github-models-api-{API_VERSION}",
+                    "provider": "local",
+                    "model": MODEL_ID,
+                    "model_revision": MODEL_ID,
                     "dimensions": dimensions,
                     "encoding": "float",
-                    "normalization": "provider-default",
+                    "normalization": "l2",
                 },
                 "embedding": vector,
             }
@@ -570,14 +540,14 @@ def main() -> int:
             "",
             f"- Commits indexed: `{len(commit_shas)}`",
             f"- Vector records: `{len(records)}`",
-            f"- Model: `{model}`",
+            f"- Model: `{MODEL_ID}`",
             f"- Dimensions: `{dimensions}`",
             f"- Webhook delivered: `{'yes' if webhook_url else 'not configured'}`",
         )
     )
     print(
         f"Generated {len(records)} embedding records from {len(commit_shas)} commits "
-        f"with {model} ({dimensions} dimensions)."
+        f"with {MODEL_ID} ({dimensions} dimensions)."
     )
     return 0
 
