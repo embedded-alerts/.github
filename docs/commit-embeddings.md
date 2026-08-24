@@ -16,9 +16,10 @@ history backfills.
    message, changed paths, and the textual first-parent patch.
 4. Potential credential lines and private-key blocks are removed. Common
    environment and private-key file types are excluded from patch content.
-5. GitHub Models generates 512-dimensional
-   `openai/text-embedding-3-small` vectors with the caller's short-lived
-   `GITHUB_TOKEN`; no long-lived model API key is required.
+5. The runner generates 1,024-dimensional `eal/git-commit-hash-v1` vectors by
+   signed feature hashing identifiers, identifier character trigrams, tokens,
+   and token bigrams, followed by L2 normalization. This has no package,
+   service, account, or model API dependency.
 6. Records are uploaded as a uniquely named Actions artifact. If an HTTPS
    webhook is configured, the exact newline-delimited JSON payload is also
    delivered to that endpoint and a non-success response fails the job.
@@ -33,7 +34,6 @@ Every caller must grant only the permissions the action needs:
 ```yaml
 permissions:
   contents: read
-  models: read
 ```
 
 The caller must check out with `fetch-depth: 0` and invoke the organization
@@ -84,17 +84,30 @@ dropping commits. Split those histories into bounded manual ranges. Deleted
 branch events are skipped. Merge commits are represented by their change from
 the first parent, which matches the change introduced on the pushed branch.
 
+## Embedding-space boundary
+
+`eal/git-commit-hash-v1` is a deterministic code-aware lexical embedding, not
+a neural semantic model. It is suitable for immediate commit similarity,
+deduplication, clustering, and candidate retrieval without network or secret
+dependencies. Consumers must filter on provider, model revision, dimensions,
+and normalization and must never compare it directly with vectors from another
+embedding space.
+
+The optional webhook may store these vectors as-is or use the bounded `content`
+field to produce a separate neural embedding. A downstream system must assign
+that result a different model-space identity rather than overwriting the local
+vector's provenance.
+
 ## Security and operating boundaries
 
-- Only a push or an explicitly requested backfill sends source text to the
-  model endpoint; pull requests do not receive model permissions.
+- Only a push or an explicitly requested backfill generates vectors. Source
+  text does not leave the runner unless the optional webhook is configured.
 - The action never persists checkout credentials and does not write back to the
   repository.
 - Binary content is not embedded. Patch bytes, document bytes, commit counts,
   retries, and network timeouts are bounded.
 - The webhook token is optional, is never written into an artifact, and is not
   logged.
-- GitHub Models access must be enabled for the organization. A disabled policy
-  fails closed at the model request rather than producing placeholder vectors.
 - Artifacts provide generation and recovery, not a query service. Configure the
-  webhook when records must enter a durable pgvector or other vector index.
+  webhook when records must enter a durable pgvector, neural embedding, or
+  other vector-index pipeline.
