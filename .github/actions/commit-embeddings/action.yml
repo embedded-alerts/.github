@@ -2,9 +2,6 @@ name: Generate Git commit embeddings
 description: Generate model-versioned vector records from newly pushed Git commits.
 
 inputs:
-  github-token:
-    description: Short-lived GITHUB_TOKEN with contents:read and models:read.
-    required: true
   repository:
     description: Repository in owner/name form.
     required: true
@@ -20,14 +17,10 @@ inputs:
     description: Human-readable branch or tag name associated with the push.
     required: false
     default: ""
-  model:
-    description: GitHub Models embedding model identifier.
-    required: false
-    default: openai/text-embedding-3-small
   dimensions:
-    description: Number of dimensions requested for each embedding.
+    description: Number of dimensions in the local feature-hash embedding.
     required: false
-    default: "512"
+    default: "1024"
   max-commits:
     description: Maximum commits accepted in one delivered range.
     required: false
@@ -77,12 +70,10 @@ runs:
       id: generate
       shell: bash
       env:
-        EAL_GITHUB_TOKEN: ${{ inputs.github-token }}
         EAL_REPOSITORY: ${{ inputs.repository }}
         EAL_BEFORE_SHA: ${{ inputs.before-sha }}
         EAL_AFTER_SHA: ${{ inputs.after-sha }}
         EAL_REF_NAME: ${{ inputs.ref-name }}
-        EAL_EMBEDDING_MODEL: ${{ inputs.model }}
         EAL_EMBEDDING_DIMENSIONS: ${{ inputs.dimensions }}
         EAL_MAX_COMMITS: ${{ inputs.max-commits }}
         EAL_MAX_CHUNK_BYTES: ${{ inputs.max-chunk-bytes }}
