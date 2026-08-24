@@ -17,7 +17,6 @@ on:
 
 permissions:
   contents: read
-  models: read
 
 jobs:
   embed-commits:
@@ -35,7 +34,6 @@ jobs:
       - name: Generate commit embeddings
         uses: ./.github/actions/commit-embeddings
         with:
-          github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           before-sha: ${{ inputs.before_sha || github.event.before || '' }}
           after-sha: ${{ inputs.after_sha || github.event.after || github.sha }}
