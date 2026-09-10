@@ -34,7 +34,7 @@ SECRET_PATTERNS = [
     re.compile(r'gh[pousr]_[A-Za-z0-9]{20,}'),
     re.compile(r'github_pat_[A-Za-z0-9_]{20,}'),
     re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'),
-    re.compile(r'(?i)authorization:\\s*bearer\\s+[A-Za-z0-9._-]{16,}'),
+    re.compile(r'(?i)authorization:\s*bearer\s+[A-Za-z0-9._-]{16,}'),
 ]
 
 def fail(message: str) -> None:
@@ -71,10 +71,14 @@ for path in workflow_paths:
     text = path.read_text(encoding='utf-8')
     if 'permissions:' not in text:
         fail(f'workflow lacks explicit permissions: {path.relative_to(ROOT)}')
-    if 'timeout-minutes:' not in text:
-        fail(f'workflow lacks timeout: {path.relative_to(ROOT)}')
+    # GitHub does not allow `timeout-minutes` on a job that calls a reusable
+    # workflow with job-level `uses:`. Require a timeout only for workflows
+    # that contain locally executed jobs (`runs-on:`); the called reusable
+    # workflow owns the timeout for reusable-call jobs.
+    if 'runs-on:' in text and 'timeout-minutes:' not in text:
+        fail(f'workflow with local jobs lacks timeout: {path.relative_to(ROOT)}')
     for number, line in enumerate(text.splitlines(), 1):
-        match = re.search(r'^\\s*(?:-\\s+)?uses:\\s*([^\\s#]+)', line)
+        match = re.search(r'^\s*(?:-\s+)?uses:\s*([^\s#]+)', line)
         if not match:
             continue
         ref = match.group(1)
