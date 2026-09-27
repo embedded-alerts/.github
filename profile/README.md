@@ -1,3 +1,13 @@
+# Embedded Alerts
+
+Embedded Alerts is a Google Alerts-style platform that discovers new or materially changed web content and matches it to users' saved concepts with **embeddings and semantic similarity**, rather than relying only on literal keyword search.
+
+The core scaling model is reverse semantic search: active user alert vectors form the hot ANN index, while newly discovered webpages are streamed through extraction, deduplication, compact embedding, candidate matching, exact scoring, optional richer reranking, and a durable delivery state machine. Page vectors are transient by default; persistent historical page vectors are a separate **Embedded Search** capability rather than a prerequisite for real-time alerts.
+
+- [Semantic alert architecture and cost guardrails](../docs/SEMANTIC_ALERT_ARCHITECTURE.md)
+- [Canonical Linear project](https://linear.app/denman/project/githubcomembedded-alerts-2fb7392497ab)
+- [DEN-3461: source ingestion and model-versioned embedding search](https://linear.app/denman/issue/DEN-3461/embedded-alerts-implement-source-ingestion-and-model-versioned)
+
 <!-- org-project-routing:start -->
 ## Planning and delivery
 
